@@ -5,11 +5,9 @@ const todoInput = document.querySelector('#todo');
 const clearBtn = document.querySelector('#clearBtn');
 const search = document.querySelector('#search');
 const statusButtons = document.querySelector('.status');
-// const allItem = document.querySelectorAll('.list-group-item');
 
 // Load all event listners
 allEventListners();
-
 
 // Functions of all event listners
 function allEventListners() {
@@ -28,6 +26,7 @@ function allEventListners() {
 function addToLocalStorage(todos) {
     localStorage.setItem('todos', JSON.stringify(todos));
 }
+
 let todos = [];
 function getFromLocalStorage() {
     const reference = localStorage.getItem('todos');
@@ -36,6 +35,7 @@ function getFromLocalStorage() {
       return todos;
     }
 }
+
 function restoreTodos(todoArr) {
     todoArr.forEach(todo => {
         createListItem(todo);
@@ -86,7 +86,6 @@ function removeTodo(e) {
     // Remove todo
     if (e.target.classList.contains('fa-trash-alt')) {
         if (confirm('Are you sure')) {
-            
             const itemName = e.target.parentElement.innerText.split(" ").join("");
             let storage = getFromLocalStorage();
             const storageResult = storage.filter(item => {
@@ -107,12 +106,10 @@ function removeTodo(e) {
     }
 }
 
-
 // Clear or remove all todos function
 function clearTodoList() {
     todoList.innerHTML = '';
 }
-
 
 // Search todo function
 function searchTodo(e) {
