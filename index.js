@@ -36,7 +36,7 @@ function addToLocalStorageAsArr(key, value) {
 function getFromLocalStorage(key) {
     const reference = localStorage.getItem(key);
     if (reference) {
-      todos = JSON.parse(reference);
+      const todos = JSON.parse(reference);
       return todos;
     }
 }
@@ -132,6 +132,7 @@ function removeTodo(e) {
 function clearTodoList() {
     todoList.innerHTML = '';
     localStorage.setItem("todos", "");
+    localStorage.setItem("checkboxStatesInOrder", "");
 }
 
 // Search todo function
