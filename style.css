@@ -63,16 +63,20 @@
 .list-group-item.done .todo-text {
     text-decoration: line-through;
     color: #888;
+    margin-left: 14.5px;
 }
+
 .input-group-append button {
     background-color: #D1A5A5;
     color: #4D4D4D;
     border-radius: 0 !important;
     margin: 1px 0;
 }
+
 #search, .btn-outline-secondary, #todo, #clearBtn {
     border-radius: 0 !important;
 }
+
 /* Duplicated */
 /* .list-group-item i.fa-trash-alt {
     color: #D1A5A5;
@@ -88,6 +92,7 @@
     z-index: -1;
     margin: -5px auto auto auto;
 }
+
 .layer-2 {
     height: 12px;
     width: 96%;

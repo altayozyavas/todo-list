@@ -50,6 +50,15 @@ function restoreTodos(todoArr) {
     }
 }
 
+function saveCheckboxState() {
+    let checkboxState = [];
+    for (i = 0; i < itemsList.length; i++) {
+        checkboxState.push(itemsList[i].className)
+    }
+    localStorage.setItem("checkboxStatesInOrder", "");
+    addToLocalStorageAsArr("checkboxStatesInOrder", checkboxState);
+}
+
 restoreTodos(getFromLocalStorage('todos'));
 
 function createListItem(todoValue = todoInput.value, className = 'list-group-item') {
@@ -95,17 +104,6 @@ function addTodo(e) {
     }
     e.preventDefault();
 }
-
-function saveCheckboxState() {
-    let checkboxState = [];
-    for (i = 0; i < itemsList.length; i++) {
-        checkboxState.push(itemsList[i].className)
-    }
-    localStorage.setItem("checkboxStatesInOrder", "");
-    addToLocalStorageAsArr("checkboxStatesInOrder", checkboxState);
-}
-
-// todoList.addEventListener("click", saveCheckboxState);
 
 // Remove and complete todo item function
 function removeTodo(e) {
