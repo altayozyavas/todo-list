@@ -5,6 +5,7 @@ const todoInput = document.querySelector('#todo');
 const clearBtn = document.querySelector('#clearBtn');
 const search = document.querySelector('#search');
 const statusButtons = document.querySelector('.status');
+const itemsList = document.getElementsByClassName("list-group-item");
 
 // Load all event listners
 allEventListners();
@@ -21,15 +22,19 @@ function allEventListners() {
     search.addEventListener('keyup', searchTodo);
     // Added active tab function
     statusButtons.addEventListener('click', activeTab);
-}
+    //save checkbox states
+    todoList.addEventListener("click", saveCheckboxState);
 
-function addToLocalStorage(todos) {
-    localStorage.setItem('todos', JSON.stringify(todos));
 }
 
 let todos = [];
-function getFromLocalStorage() {
-    const reference = localStorage.getItem('todos');
+
+function addToLocalStorageAsArr(key, value) {
+    localStorage.setItem(key, JSON.stringify(value));
+}
+
+function getFromLocalStorage(key) {
+    const reference = localStorage.getItem(key);
     if (reference) {
       todos = JSON.parse(reference);
       return todos;
@@ -37,18 +42,21 @@ function getFromLocalStorage() {
 }
 
 function restoreTodos(todoArr) {
-    todoArr.forEach(todo => {
-        createListItem(todo);
-    });
+    constClassNames = getFromLocalStorage("checkboxStatesInOrder");
+    if (todoArr != undefined) {
+        for (let i = 0; i < todoArr.length; i++) {
+            createListItem(todoArr[i], constClassNames[i]);
+        }
+    }
 }
 
-restoreTodos(getFromLocalStorage());
+restoreTodos(getFromLocalStorage('todos'));
 
-function createListItem(todoValue = todoInput.value) {
+function createListItem(todoValue = todoInput.value, className = 'list-group-item') {
         // Create li element
         const li = document.createElement('li');
         // Add class
-        li.className = 'list-group-item';
+        li.className = className;
         // Add complete and remove icon
         li.innerHTML = `<i class="far fa-square done-icon"></i>
                         <i class="far fa-check-square done-icon"></i>`;
@@ -69,9 +77,17 @@ function createListItem(todoValue = todoInput.value) {
 // Add todo item function
 function addTodo(e) {
     if (todoInput.value !== '') {
-        todos.push(todoInput.value);
-        addToLocalStorage(todos);
-        createListItem();
+        let currentTodos = getFromLocalStorage('todos');
+        if (currentTodos == undefined) {
+            currentTodos = "";
+        }
+        if (currentTodos.includes(todoInput.value)) {
+            alert(`You already have "${todoInput.value}" in your shopping list`);
+        } else {
+            todos.push(todoInput.value);
+            addToLocalStorageAsArr("todos", todos);
+            createListItem();
+        }
         // Clear input
         todoInput.value = '';
     } else {
@@ -80,23 +96,31 @@ function addTodo(e) {
     e.preventDefault();
 }
 
+function saveCheckboxState() {
+    let checkboxState = [];
+    for (i = 0; i < itemsList.length; i++) {
+        checkboxState.push(itemsList[i].className)
+    }
+    localStorage.setItem("checkboxStatesInOrder", "");
+    addToLocalStorageAsArr("checkboxStatesInOrder", checkboxState);
+}
+
+// todoList.addEventListener("click", saveCheckboxState);
 
 // Remove and complete todo item function
 function removeTodo(e) {
-    // Remove todo
     if (e.target.classList.contains('fa-trash-alt')) {
         if (confirm('Are you sure')) {
             const itemName = e.target.parentElement.innerText.split(" ").join("");
-            let storage = getFromLocalStorage();
+            let storage = getFromLocalStorage('todos');
             const storageResult = storage.filter(item => {
                 return item != itemName;
             })
             localStorage.setItem("todos", "");
-            addToLocalStorage(storageResult);
+            addToLocalStorageAsArr("todos", storageResult);
             e.target.parentElement.remove();
         }
     }
-
     // Complete todo
     if (e.target.classList.contains('todo-text')) {
         e.target.parentElement.classList.toggle('done');
@@ -109,6 +133,7 @@ function removeTodo(e) {
 // Clear or remove all todos function
 function clearTodoList() {
     todoList.innerHTML = '';
+    localStorage.setItem("todos", "");
 }
 
 // Search todo function
